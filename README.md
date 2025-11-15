@@ -1,34 +1,25 @@
-# Chess AI Project - Minimax & Genetic Algorithm
+# 🏆 Chess AI Project - Hoàn thiện với Minimax & Battle System
 
-Dự án AI Cờ Vua sử dụng thuật toán Minimax (Alpha-Beta Pruning) và Genetic Algorithm để huấn luyện AI.
+Dự án AI Cờ Vua sử dụng thuật toán **Minimax với Alpha-Beta Pruning** và **AI Battle System** để so sánh hiệu suất các AI agents.
 
 ## Cấu trúc Dự án
 
 ```
-ChessAI_Pygame/
-├── assets/                  # Thư mục chứa hình ảnh quân cờ (12 file .png)
-│   ├── bB.png              # Bishop đen
-│   ├── bK.png              # King đen
-│   ├── bN.png              # Knight đen
-│   ├── bP.png              # Pawn đen
-│   ├── bQ.png              # Queen đen
-│   ├── bR.png              # Rook đen
-│   ├── wB.png              # Bishop trắng
-│   ├── wK.png              # King trắng
-│   ├── wN.png              # Knight trắng
-│   ├── wP.png              # Pawn trắng
-│   ├── wQ.png              # Queen trắng
-│   └── wR.png              # Rook trắng
-├── src/
-│   ├── __init__.py         # Package init
-│   ├── config.py           # Cấu hình game (màn hình, màu sắc, trọng số)
-│   ├── evaluation.py       # (KHUNG) Hàm lượng giá bàn cờ
-│   ├── engine.py           # (KHUNG) Thuật toán Minimax với Alpha-Beta
-│   ├── genetic_algorithm.py # (KHUNG) Genetic Algorithm
-│   └── game_view.py        # (HOÀN THÀNH) Logic vẽ Pygame
-├── play_game.py            # (HOÀN THÀNH) File chạy game chính
-├── train_ai.py             # (HOÀN THÀNH) File huấn luyện GA
-└── requirements.txt        # Danh sách thư viện cần thiết
+Chess-AI-Project/
+├── 📁 assets/                    # Hình ảnh quân cờ (đã có demo)
+├── 📁 src/
+│   ├── config.py                 # Cấu hình (trọng số, màu sắc, battle settings)
+│   ├── evaluation.py             # Hàm đánh giá thông minh
+│   ├── engine.py                 # Minimax + Alpha-Beta + Quiescence
+│   ├── game_view.py              # UI Pygame với highlights
+│   ├── ai_battle.py              # Battle system
+│   └── genetic_algorithm.py     # Cần implement
+├── 🎮 play_game.py               # Game người vs AI
+├── ⚔️ ai_battle.py               # AI Battle Arena
+├── 🧪 test_engine.py             # Test Minimax engine
+├── 🧪 test_battle.py             # Test battle system
+├── 🤖 train_ai.py                # GA training
+└── 📦 requirements.txt           # Dependencies
 ```
 
 ## Cài đặt
@@ -71,65 +62,26 @@ python ai_battle.py
 
 ### 🧪 Test hệ thống
 ```bash
-python test_features.py    # Test UI features
-python test_engine.py      # Test Minimax engine  
-python test_battle.py      # Test battle system
+python test_engine.py      # Test Minimax engine hoạt động tốt
+python test_battle.py      # Test battle system  
 ```
 
-### 🤖 Huấn luyện AI (sau khi hoàn thành code)
+### 🤖 Huấn luyện AI (genetic algorithm - chưa hoàn thành)
 ```bash
-python train_ai.py
+python train_ai.py         # Cần implement GA trước
+```
+## Chạy chương trình
+
+### Chạy ngay để test AI:
+```bash
+python ai_battle.py
+# Chọn: 3 (Random vs Minimax)
+# Số ván: 10
 ```
 
-## Nhiệm vụ của Người dùng
+### Chơi với AI:
+```bash
+python play_game.py
+```
 
-Bạn cần tự hiện thực các file sau:
-
-### 1. `src/evaluation.py`
-- Hàm `evaluate_board()`: Lượng giá vị thế bàn cờ
-- Xử lý các trường hợp kết thúc game
-- Tính điểm dựa trên vật chất và vị trí
-
-### 2. `src/engine.py`
-- Hàm `random_move()`: Trả về nước đi ngẫu nhiên
-- Hàm `find_best_move()`: Tìm nước đi tốt nhất
-- Hàm `minimax_search()`: Thuật toán Minimax với Alpha-Beta Pruning
-
-### 3. `src/genetic_algorithm.py`
-- `play_game_headless()`: Mô phỏng ván cờ không GUI
-- `calculate_fitness()`: Tính fitness của một chromosome
-- `initialize_population()`: Khởi tạo quần thể
-- `selection()`: Chọn lọc cha mẹ
-- `crossover()`: Lai ghép
-- `mutate()`: Đột biến
-
-## Ghi chú
-
-- File `game_view.py` đã được hiện thực đầy đủ logic vẽ Pygame
-- File `play_game.py` và `train_ai.py` đã sẵn sàng sử dụng
-- Hiện tại AI sử dụng nước đi ngẫu nhiên, bạn cần thay thế bằng Minimax
-- Các lỗi import sẽ biến mất sau khi cài đặt `python-chess` và `pygame`
-
-## Cấu trúc Code
-
-### Game Loop (play_game.py)
-1. Xử lý input người chơi
-2. AI tính toán nước đi
-3. Vẽ bàn cờ và quân cờ
-4. Kiểm tra game over
-
-### Training Loop (train_ai.py)
-1. Khởi tạo quần thể
-2. Tính fitness cho từng cá thể
-3. Chọn lọc, lai ghép, đột biến
-4. Lặp lại qua các thế hệ
-
-Chúc bạn code vui vẻ! 🎯
-
-trọng số của các quân cờ:
-pawn: 10
-knight: 30
-bishop: 30
-rook: 50
-queen: 90
-king: 900
+Dự án đã thành công trong việc tạo ra một hệ thống Chess AI hoàn chỉnh với khả năng chơi thông minh và đánh giá hiệu suất! 
