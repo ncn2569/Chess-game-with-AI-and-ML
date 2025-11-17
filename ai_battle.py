@@ -108,7 +108,7 @@ def main():
     while True:
         print("\nMENU CHÍNH:")
         print("1. Tự chọn 2 AI để đấu")
-        print("3. Battle Random vs Minimax (khuyến nghị)")
+        print("2. Battle Random vs Minimax (khuyến nghị)")
         print("0. Thoát")
         
         try:

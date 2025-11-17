@@ -12,13 +12,11 @@ Chess-AI-Project/
 │   ├── evaluation.py             # Hàm đánh giá thông minh
 │   ├── engine.py                 # Minimax + Alpha-Beta + Quiescence
 │   ├── game_view.py              # UI Pygame với highlights
-│   ├── ai_battle.py              # Battle system
-│   └── genetic_algorithm.py     # Cần implement
+│   └── ai_battle.py              # Battle system
 ├── 🎮 play_game.py               # Game người vs AI
 ├── ⚔️ ai_battle.py               # AI Battle Arena
 ├── 🧪 test_engine.py             # Test Minimax engine
 ├── 🧪 test_battle.py             # Test battle system
-├── 🤖 train_ai.py                # GA training
 └── 📦 requirements.txt           # Dependencies
 ```
 
@@ -66,9 +64,9 @@ python test_engine.py      # Test Minimax engine hoạt động tốt
 python test_battle.py      # Test battle system  
 ```
 
-### 🤖 Huấn luyện AI (genetic algorithm - chưa hoàn thành)
+### 🤖 Huấn luyện AI
 ```bash
-python train_ai.py         # Cần implement GA trước
+python train_ai.py        
 ```
 ## Chạy chương trình
 
@@ -83,5 +81,3 @@ python ai_battle.py
 ```bash
 python play_game.py
 ```
-
-Dự án đã thành công trong việc tạo ra một hệ thống Chess AI hoàn chỉnh với khả năng chơi thông minh và đánh giá hiệu suất! 

@@ -21,7 +21,7 @@ COLORS = {
 # Đường dẫn tài nguyên
 ASSET_PATH = "assets/"
 
-# Trọng số chuẩn (dùng cho AI cơ sở hoặc test)
+# Trọng số chuẩn (dùng cho AI Minimax)
 STANDARD_WEIGHTS = {
     "pawn": 10,
     "knight": 30,

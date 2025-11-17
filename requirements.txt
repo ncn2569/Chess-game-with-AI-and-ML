@@ -1,2 +1,4 @@
-python-chess
-pygame
+python-chess==1.999
+pygame==2.6.1
+torch==2.9.1
+numpy==2.3.0
