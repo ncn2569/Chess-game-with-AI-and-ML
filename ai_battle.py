@@ -109,6 +109,7 @@ def main():
         print("\nMENU CHÍNH:")
         print("1. Tự chọn 2 AI để đấu")
         print("2. Battle Random vs Minimax (khuyến nghị)")
+        print("3. Battle Random vs ML")
         print("0. Thoát")
         
         try:
@@ -125,6 +126,13 @@ def main():
                 print("\n BATTLE: Random vs Minimax")
                 agent1 = RandomAgent()
                 agent2 = MinimaxAgent(depth=config.BATTLE_SEARCH_DEPTH)
+                
+                num_games = int(input("Số ván đấu (khuyến nghị 10): ") or "10")
+                run_tournament(agent1, agent2, num_games)
+            elif choice == 3:
+                print("\n BATTLE: Random vs ML")
+                agent1 = RandomAgent()
+                agent2 = MLAgent()
                 
                 num_games = int(input("Số ván đấu (khuyến nghị 10): ") or "10")
                 run_tournament(agent1, agent2, num_games)

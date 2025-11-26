@@ -3,7 +3,11 @@ import time
 import random
 from typing import Tuple, Optional, Dict, Any
 from . import engine, config
-
+from chess import Board, pgn   
+from .chess_ML.model import ChessModel
+import torch
+import pickle
+import numpy as np
 class AIAgent:
     """Base class cho các AI agent"""
     
@@ -72,27 +76,82 @@ class MinimaxAgent(AIAgent):
         return move
 
 class MLAgent(AIAgent):
-    """AI agent sử dụng Machine Learning (placeholder cho tương lai)"""
+    """AI agent sử dụng Machine Learning (model + mapping có sẵn)"""
     
-    def __init__(self):
-        super().__init__("ML AI", "Machine Learning Agent (chưa implement)")
+    def __init__(self, model=None, move_to_idx: Dict[str, int] = None, idx_to_move: Dict[int, str] = None):
+        super().__init__("ML AI", "Machine Learning Agent")
+        with open("src\chess_ML\models\heavy_move_to_int_1", "rb") as file:
+            self.move_to_int = pickle.load(file) #load mapping
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # sử dụng GPU nếu có
+
+        # Load the model
+        self.model = ChessModel(num_classes=len(self.move_to_int))
+        self.model.load_state_dict(torch.load("src/chess_ML/models/TORCH_1_100EPOCHS.pth"))
+        self.model.to(self.device)
+        self.model.eval()  # Set the model to evaluation mode (it may be reductant)
+
+        self.int_to_move = {v: k for k, v in self.move_to_int.items()}
+    def board_to_matrix(self, board: Board):
+        """
+        Chuyển một Board -> mảng 13x8x8
+        - 0..5: các loại quân của trắng
+        - 6..11: các loại quân của đen
+        - 12: các ô mà một nước hợp lệ có thể đi tới
+        """
+        arr = np.zeros((13, 8, 8), dtype=np.float32)
+        pieces = board.piece_map()
+        for sq, pc in pieces.items():
+            r, c = divmod(sq, 8)
+            # index kênh: offset màu + loại (loại bắt đầu từ 0)
+            color_offset = 0 if pc.color else 6
+            type_idx = pc.piece_type - 1
+            channel = color_offset + type_idx
+            arr[channel, r, c] = 1.0
+
+        # đánh dấu ô đích của tất cả nước hợp lệ ở kênh cuối cùng
+        for mv in board.legal_moves:
+            tr = mv.to_square
+            r_to, c_to = divmod(tr, 8)
+            arr[12, r_to, c_to] = 1.0
+
+        return arr
+    def prepare_input(self, board: Board):
+        matrix = self.board_to_matrix(board)
+        X_tensor = torch.tensor(matrix, dtype=torch.float32).unsqueeze(0)
+        return X_tensor
     
     def get_move(self, board: chess.Board, time_limit: float = 10.0) -> Optional[chess.Move]:
-        # Hiện tại chỉ là placeholder, có thể implement neural network sau
         start_time = time.time()
-        
-        # Tạm thời sử dụng random để có thể test
         legal_moves = list(board.legal_moves)
-        if not legal_moves:
-            return None
+        X_tensor = self.prepare_input(board).to(self.device)
+        with torch.no_grad():
+            logits = self.model(X_tensor)
         
-        move = random.choice(legal_moves)
+        logits = logits.squeeze(0)  # Remove batch dimension
+        
+        probabilities = torch.softmax(logits, dim=0).cpu().numpy()  # Convert to probabilities
+        legal_moves = list(board.legal_moves)
+        legal_moves_uci = [move.uci() for move in legal_moves] # lấy danh sách những nước hợp lệ
+        sorted_indices = np.argsort(probabilities)[::-1]
+        for move_index in sorted_indices: #duyệt từ cao xuống thấp
+            move = self.int_to_move[move_index] # chuyển từ index sang uci
+            if move in legal_moves_uci: #nếu nước đó hợp lệ
+                chosen_move = chess.Move.from_uci(move) 
+                elapsed = time.time() - start_time
+                self.total_time += elapsed
+                self.moves_made += 1
+                return chosen_move
+    
         
         elapsed = time.time() - start_time
         self.total_time += elapsed
         self.moves_made += 1
         
-        return move
+        # optional: cảnh báo nếu vượt time limit
+        if elapsed > time_limit:
+            print(f"⚠️  {self.name} vượt thời gian: {elapsed:.2f}s > {time_limit}s")
+        return None  # Không tìm được nước đi hợp lệ
+    
 
 class GameResult:
     """Kết quả của một ván game"""
