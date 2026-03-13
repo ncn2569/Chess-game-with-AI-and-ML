@@ -80,13 +80,13 @@ class MLAgent(AIAgent):
     
     def __init__(self, model=None, move_to_idx: Dict[str, int] = None, idx_to_move: Dict[int, str] = None):
         super().__init__("ML AI", "Machine Learning Agent")
-        with open("src\chess_ML\models\heavy_move_to_int_1", "rb") as file:
+        with open("src/chess_ML/models/heavy_move_to_int_1", "rb") as file:
             self.move_to_int = pickle.load(file) #load mapping
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # sử dụng GPU nếu có
 
         # Load the model
         self.model = ChessModel(num_classes=len(self.move_to_int))
-        self.model.load_state_dict(torch.load("src/chess_ML/models/TORCH_1_100EPOCHS.pth"))
+        self.model.load_state_dict(torch.load('src/chess_ML/models/TORCH_1_100EPOCHS.pth', map_location=torch.device('cuda')))
         self.model.to(self.device)
         self.model.eval()  # Set the model to evaluation mode (it may be reductant)
 
@@ -122,7 +122,6 @@ class MLAgent(AIAgent):
     
     def get_move(self, board: chess.Board, time_limit: float = 10.0) -> Optional[chess.Move]:
         start_time = time.time()
-        legal_moves = list(board.legal_moves)
         X_tensor = self.prepare_input(board).to(self.device)
         with torch.no_grad():
             logits = self.model(X_tensor)

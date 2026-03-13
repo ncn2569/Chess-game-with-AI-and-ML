@@ -8,7 +8,7 @@ class ChessModel(nn.Module):
         self.conv1 = nn.Conv2d(13, 64, kernel_size=3, padding=1)
         self.conv2 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
         self.flatten = nn.Flatten()
-        self.fc1 = nn.Linear(8 * 8 * 128, 256)
+        self.fc1 = nn.Linear(8 * 8 * 128, 256) #8*8*128 = 8192
         self.fc2 = nn.Linear(256, num_classes)
         self.relu = nn.ReLU()
 
